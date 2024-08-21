@@ -45,14 +45,14 @@ def get_token():
 
 def parser(article):
 
-    url_get = "https://masuma.ru/api/getitemsbyoem"
+    url_get = "https://masuma.ru/api/selectionbycar"
     token = get_token()
     print (token)
     print (article)
 
     params = {
         "token": token,
-        "article": article,
+        # "article": article,
     }
 
     response = requests.get(url_get, params=params)

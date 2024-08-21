@@ -7,5 +7,6 @@ masuma = cred ("evoverchenko@inbox.ru", "Qw123456")
 avtolider = cred ("evoverchenko@inbox.ru", "Qw123456")
 armtek = cred ("evoverchenko@inbox.ru", "Qw123456")
 avtotreid = cred ("evoverchenko@inbox.ru", "Qw123456")
+rossko = cred ("evoverchenko@inbox.ru", "Qw123456")
 megaros = cred ("STO.FENIKS54@yandex.ru", "Qw123456")
 
