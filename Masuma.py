@@ -1,9 +1,9 @@
 from Credits import masuma
 import requests
+import json
 
-def parser():
-    # URL к которому делаем запрос
-    url_api = "https://masuma.ru/api"
+def get_token():
+    #Адрес для получения токена
     url_auth = "https://masuma.ru/api/authorization"
 
     # Заголовки запроса
@@ -25,7 +25,7 @@ def parser():
     }
 
     # Выполнение GET запроса
-    response = requests.get(url_auth, params=params)
+    response = requests.get(url_auth, params=params).json()
 
     # Выполнение POST запроса
     # response = requests.post(url, headers=headers, data=data)
@@ -37,9 +37,33 @@ def parser():
     # response = requests.delete(url, headers=headers)
 
     # Проверка кода ответа
-    if response.status_code == 200:
-        print("Запрос выполнен успешно!")
-        print("Ответ сервера:", response.json())  # Если ответ в формате JSON
-    else:
-        print(f"Ошибка выполнения запроса. Код ошибки: {response.status_code}")
-        print("Текст ошибки:", response.text)
+    # print("Запрос выполнен успешно!")
+    # print("Ответ сервера:", response['token'])  # Если ответ в формате JSON
+
+    return (response['token'])
+
+
+def parser(article):
+
+    url_get = "https://masuma.ru/api/getitemsbyoem"
+    token = get_token()
+    print (token)
+    print (article)
+
+    params = {
+        "token": token,
+        "article": article,
+    }
+
+    response = requests.get(url_get, params=params)
+    print (response.status_code)
+
+    # if response.status_code == 200:
+    #     print("Запрос выполнен успешно!")
+    #     print("Ответ сервера:", response['items'])
+    # else:
+    #     print(f"Ошибка выполнения запроса. Код ошибки: {response.status_code}")
+    #     print("Текст ошибки:", response.text)
+
+    
+

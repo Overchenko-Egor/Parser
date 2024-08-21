@@ -5,5 +5,5 @@ import Masuma
 def main(page: ft.Page):
     page.title = "Flet App"
 
-Masuma.parser()
+Masuma.parser('MIC-105')
 ft.app(target=main)
