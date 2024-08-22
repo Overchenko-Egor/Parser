@@ -2,59 +2,45 @@ from Credits import rossko
 import requests
 import json
 
-def parser (artic):
-# URL для авторизации и получения токена
-    auth_url = "https://www.masuma.ru/api/authorization"
-    login = "evoverchenko@inbox.ru"
-    password = "Qw123456"
+def parser(artic):
+    key1 = 'ad59f516976bf1c67e88cc350f47dd5d'
+    key2 = 'be3c037947d8694a1f4667af2a0b783c'
+    
+    # URL WSDL
+    url = 'http://api.rossko.ru/service/v2.1/GetSearch'
 
-    # Параметры для авторизации
-    auth_params = {
-        'login': login,
-        'password': password
+    # SOAP-XML сообщение
+    soap_message = f"""<?xml version="1.0" encoding="UTF-8"?>
+    <soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/" xmlns:tns="http://api.rossko.ru/">
+        <soap:Body>
+            <tns:GetSearch>
+                <tns:KEY1>{key1}</tns:KEY1>
+                <tns:KEY2>{key2}</tns:KEY2>
+                <tns:text>{artic}</tns:text>
+                <tns:delivery_id>000000001</tns:delivery_id>
+            </tns:GetSearch>
+        </soap:Body>
+    </soap:Envelope>"""
+
+    headers = {
+        'Content-Type': 'text/xml; charset=utf-8',
+        'SOAPAction': 'http://api.rossko.ru/service/v2.1/GetSearch'
     }
 
     try:
-        # Выполнение GET-запроса для авторизации
-        response = requests.get(auth_url, params=auth_params)
-        response.raise_for_status()  # Проверка на успешность ответа
-
-        # Извлечение токена из ответа
-        token = response.json().get('token')
-        if not token:
-            raise ValueError("Не удалось получить токен авторизации.")
-    except requests.RequestException as e:
-        print(f"Ошибка при запросе авторизации: {e}")
-        return None
-    except ValueError as e:
-        print(e)
-        return None
-
-    # URL для получения данных по артикулу
-    item_url = "https://www.masuma.ru/api/getitemsbyarticle"
-
-    # Параметры для запроса данных по артикулу
-    item_params = {
-        'token': token,
-        'article': article
-    }
-
-    try:
-        # Выполнение POST-запроса для получения данных по артикулу
-        response = requests.post(item_url, data=item_params)
-        response.raise_for_status()
-
-        # Извлечение списка запчастей из ответа
-        items = response.json().get('items', [])
-        if not items:
-            print(f"Не найдены данные для артикула {article}")
+        # Отправка POST-запроса с XML в теле
+        response = requests.post(url, data=soap_message, headers=headers)
+        
+        # Вывод статуса и текста ответа для отладки
+        print("Статус ответа:", response.status_code)
+        print("Текст ответа:", response.text)
+        
+        if response.status_code == 200:
+            return response.text
+        else:
+            print(f"Ошибка выполнения запроса. Код ошибки: {response.status_code}")
             return None
-
-        # Вывод информации о найденных запчастях
-        for item in items:
-            print(f"Артикул: {item.get('article')}, Цена: {item.get('price', 'Цена не указана')}")
-        return items
-    except requests.RequestException as e:
-        print(f"Ошибка при запросе данных: {e}")
+    except requests.exceptions.RequestException as e:
+        print(f"Произошла ошибка при выполнении запроса: {e}")
         return None
 
