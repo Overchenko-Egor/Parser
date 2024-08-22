@@ -6,6 +6,6 @@ import Rossko
 def main(page: ft.Page):
     page.title = "Flet App"
 
-Rossko.parser("333114")
-# Masuma.parser('MIC-105')
+# Rossko.parser("32421")
+Masuma.parser('MIC-105')
 ft.app(target=main)
